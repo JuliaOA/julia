@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { CreateScenarioRepository } from "../repository/create-scenario.repository";
 import { CreateScenarioDto } from "../dto/create-scenario.dto";
 
@@ -7,6 +7,7 @@ import { CreateScenarioDto } from "../dto/create-scenario.dto";
 export class CreateScenarioUseCase {
     constructor(
         private readonly createScenarioRepository: CreateScenarioRepository,
+        private readonly logger: Logger,
     ) {}
 
     async execute(data: CreateScenarioDto) {
@@ -14,7 +15,10 @@ export class CreateScenarioUseCase {
 
             const scenario = await this.createScenarioRepository.create(data);
             
-        } catch (error) {}
+        } catch (error) {
+            this.logger.error(error);
+            throw error;
+        }
     }
 }
 
